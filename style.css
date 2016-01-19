@@ -1,6 +1,5 @@
 .header {
     height: 100vh;
-    background-color: #000000;
     color: #ffffff;
 }
 
@@ -11,9 +10,11 @@
     text-align: center;
     font-family: 'Pacifico', cursive;
     font-size: 7em;
+    text-shadow: 1px 1px 1px black;
+    z-index: 1;
 }
 
-#canvas {
-  position: absolute;
-  top: 0;
+#grid {
+    position: absolute;
+    top: 0;
 }
