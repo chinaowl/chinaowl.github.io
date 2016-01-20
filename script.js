@@ -1,12 +1,17 @@
 'use strict';
 
-var canvas, context, squares, generation, WIDTH, HEIGHT, SQUARE_COUNT_X, SQUARE_COUNT_Y;
+var canvas, context, squares, generation, timer, WIDTH, HEIGHT, SQUARE_COUNT_X, SQUARE_COUNT_Y;
+var ALIVE_RATIO = 0.2;
 var SQUARE_SIZE = 25;
 var PADDING = 0;
 var ANIMATION = true;
 var colors = ['#F3D8C7', '#EFE5DC', '#0F5257', '#0B3142']; // experimenting
 
 function initCanvas() {
+    if (timer) {
+        clearTimeout(timer);
+    }
+
     canvas = document.getElementById('grid');
 
     WIDTH = window.innerWidth;
@@ -38,7 +43,7 @@ function initGrid() {
     squares = [];
 
     for (var i = 0; i < SQUARE_COUNT_X * SQUARE_COUNT_Y; i++) {
-        var alive = Math.random() < 0.5;
+        var alive = Math.random() < ALIVE_RATIO;
         squares.push(new Square(alive));
     }
 }
@@ -132,7 +137,7 @@ function getLiveNeighborsCount(index) {
 }
 
 function animate() {
-    setTimeout(function() {
+    timer = setTimeout(function() {
         if (tick()) {
             drawBoard();
             requestAnimationFrame(animate);
@@ -145,4 +150,5 @@ function click() {
     drawBoard();
 }
 
+window.onresize = initCanvas;
 window.onload = initCanvas;
