@@ -5,7 +5,14 @@ var ALIVE_RATIO = 0.2;
 var SQUARE_SIZE = 25;
 var PADDING = 0;
 var ANIMATION = true;
-var colors = ['#F3D8C7', '#EFE5DC', '#0F5257', '#0B3142']; // experimenting
+var SPEED = 2000;
+var colors = ['#F3D8C7', '#EFE5DC', '#0F5257', '#0B3142', '#FFC8C8', '#FF9999', '#35013F', '#561050']; // experimenting
+
+function initPage() {
+    window.onresize = initCanvas;
+
+    initCanvas();
+}
 
 function initCanvas() {
     if (timer) {
@@ -60,10 +67,10 @@ function drawBoard() {
     for (var y = 0; y < HEIGHT; y += SQUARE_SIZE + PADDING) {
         for (var x = 0; x < WIDTH; x += SQUARE_SIZE + PADDING) {
             if (squares[i++].alive) {
-                context.fillStyle = colors[2];
+                context.fillStyle = colors[7];
                 context.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
             } else {
-                context.fillStyle = colors[3];
+                context.fillStyle = colors[6];
                 context.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
             }
         }
@@ -142,7 +149,7 @@ function animate() {
             drawBoard();
             requestAnimationFrame(animate);
         }
-    }, 1000);
+    }, SPEED);
 }
 
 function click() {
@@ -150,5 +157,4 @@ function click() {
     drawBoard();
 }
 
-window.onresize = initCanvas;
-window.onload = initCanvas;
+window.onload = initPage;

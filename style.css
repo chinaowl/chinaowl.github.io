@@ -1,3 +1,18 @@
+body {
+    overflow-x: hidden;
+    /*background-color: #390040;*/
+    /*background-color: #0E273C;*/
+    /*background-color: #444F5A;*/
+    /*background-color: #951556;*/
+    /*background-color: #352F44;*/
+    background-color: #252243;
+}
+
+#grid {
+    position: absolute;
+    top: 0;
+}
+
 .header {
     height: 100vh;
     color: #ffffff;
@@ -14,7 +29,11 @@
     z-index: 1;
 }
 
-#grid {
-    position: absolute;
-    top: 0;
+.about {
+    max-width: 700px;
+    margin: 2.5em auto;
+    padding: 0 2em;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.5em;
+    color: #ffffff;
 }
