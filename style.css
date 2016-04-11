@@ -36,6 +36,12 @@ pre {
     z-index: 1;
 }
 
+@media (max-width: 767px) {
+    .header__text {
+        font-size: 3em;
+    }
+}
+
 .about {
     max-width: 800px;
     min-height: calc(100vh - 3em);
