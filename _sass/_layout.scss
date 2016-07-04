@@ -30,3 +30,14 @@
   color: $gray;
   float: right;
 }
+
+.post__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post__date {
+  font-style: italic;
+  font-size: 1.25em;
+  line-height: 92px;
+}
