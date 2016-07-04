@@ -1,0 +1,32 @@
+.content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2em;
+  flex: 1;
+}
+
+.post-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list__item {
+  border-bottom: 1px solid $light-gray;
+  padding: 0.5em 1em;
+}
+
+.post-list__link {
+  font-size: 1.25em;
+  color: $black;
+
+  &:hover {
+    color: $light-blue;
+  }
+}
+
+.post-list__date {
+  font-size: 1em;
+  color: $gray;
+  float: right;
+}

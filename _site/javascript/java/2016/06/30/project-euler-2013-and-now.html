@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="In college, I did a bunch of Project Euler problems (in Java) to practice for tests and interviews. A few weeks ago, I thought it would be fun to attempt som...">
+
+    <title>Project Euler: 2013 and now</title>
+    
+    <link rel="stylesheet" href=" /assets/css/main.css ">
+    <link rel="canonical" href="http://chinaowl.co/javascript/java/2016/06/30/project-euler-2013-and-now.html">
+    <link rel="alternate" type="application/rss+xml" title="China Wang" href="http://chinaowl.co /feed.xml ">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather|Pacifico|Source+Code+Pro">
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+</head>
+
+<body>
+  <div class=wrapper>
+    <header>
+  <a href="/">
+    <div class="header">
+      China Wang
+    </div>
+  </a>
+  <ul class="nav">
+    <a href="/writing">
+      <li class="nav__item">Writing</li>
+    </a> |
+    <a href="/projects">
+      <li class="nav__item">Projects</li>
+    </a>
+  </ul>
+</header>
+    <div class="content">
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Project Euler: 2013 and now</h1>
+    <p class="post-meta"><time datetime="2016-06-30T00:00:00-07:00" itemprop="datePublished">June 30, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In college, I did a bunch of <a href="https://projecteuler.net/">Project Euler</a> problems (in Java) to practice for tests and interviews. A few weeks ago, I thought it would be fun to attempt some of them in JavaScript.</p>
+
+<p>Past me had saved my solutions to GitHub, and I just now looked at them for the first time in years. And wow. Talk about embarrassing.</p>
+
+<p>Or, to frame it more positively, I’ve actually gotten better at coding after graduating!</p>
+
+<p>For example, here’s the first problem:</p>
+
+<blockquote>
+  <p>Find the sum of all the multiples of 3 or 5 below 1000.</p>
+</blockquote>
+
+<p>Pretty simple, right?</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function sumOfAllMultiples() {
+  var sum = 0;
+  
+  for (var i = 0; i &lt; 1000; i++) {
+    if (i % 3 === 0 || i % 5 === 0) {
+      sum += i;
+    }
+  }
+  
+  return sum;
+}
+</code></pre>
+</div>
+
+<p>I checked out my old solution, expecting more or less the same thing but in Java. Cue facepalm.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>public class Problem1 {
+  public static void main(String [] args) {
+    int sum3 = 0;
+    int sum5 = 0;
+    int sum15 = 0;
+    
+    for (int i = 3; i &lt; 1000; i += 3) {
+      sum3 += i;
+    }
+    
+    for (int i = 5; i &lt; 1000; i += 5) {
+      sum5 += i;
+    }
+    
+    for (int i = 15; i &lt; 1000; i += 15) {
+      sum15 += i;
+    }
+    
+    System.out.print(sum3 + sum5 - sum15);
+  }
+}
+</code></pre>
+</div>
+
+<p>Yeah, I don’t know.</p>
+
+<p>It gets better (or worse) when I look at my old solution to the second problem:</p>
+
+<blockquote>
+  <p>By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>public class Problem2 {
+  public static void main(String[] args) {
+    int sum = 0;
+    
+    for (int index = 1; fibonacci(index) &lt; 4000000; index++) {
+      if (fibonacci(index) % 2 == 0) {
+        sum += fibonacci(index);
+      }
+    }
+    
+    System.out.print(sum);
+  }
+     
+  // Find the nth Fibonacci term.
+  public static int fibonacci(int n) {
+    if (n == 1) return 1;
+    if (n == 2) return 2;
+    
+    return (fibonacci(n - 1) + (fibonacci(n - 2)));
+  }
+}
+</code></pre>
+</div>
+
+<p>I used a recursive solution to find the nth Fibonacci number, which isn’t too surprising since I’m pretty sure I had just learned about recursion at that time. But then I called that recursive method three times in that <code class="highlighter-rouge">for</code> loop?</p>
+
+<p>Here’s my iterative JavaScript solution:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function evenFib() {
+  var MAX = 4000000,
+      first = 1,
+      second = 2,
+      sum = 2,
+      temp;
+   
+  while (first + second &lt; MAX) {
+    temp = first;
+    first = second;
+    second += temp;
+     
+    if (second % 2 === 0) {
+      sum += second;
+    }
+  }
+   
+  return sum;
+}
+</code></pre>
+</div>
+
+  </div>
+
+</article>
+
+    </div>
+    <footer class="footer">
+  <pre>{O.O}
+(|||)
+^  ^</pre>
+</footer>
+  </div>
+</body>
+
+</html>
