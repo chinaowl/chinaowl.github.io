@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "`this` in JavaScript"
+title:  "<code>this</code> in JavaScript"
 date:   2015-11-08
 categories: javascript
 ---
@@ -23,204 +23,216 @@ You have to examine the call-site and the call-stack and consult the following f
 
 ## Rule One: Default Binding
 
-*   most common case
+* Most common case
+* Standalone function invocation
+* Default catch-all rule
+* Applies when a function is called with a plain, undecorated function reference
+^
 
-*   standalone function invocation
+``` js
+var counter = 0;
 
-*   default catch-all rule
+function incrementCounter() {
+    this.counter++;
+}
 
-*   applies when a function is called with a plain, undecorated function reference
+incrementCounter();
+console.log(counter); // 1 - got incremented
+```
 
-    var counter = 0;
+Note: if the function is in `strict mode`, the global object is not eligible for the default binding, so `this.counter` in the above code would throw an error.
 
-    function incrementCounter() {
-        this.counter++;
-    }
+## Rule Two: Implicit Binding
 
-    incrementCounter();
-    console.log(counter); // 1 - got incremented`</pre>
+* Consider whether the call-site has a context object (i.e., owning/containing object)
+^
 
-    Note: if the function is in `strict mode`, the global object is not eligible for the default binding, so `this.counter` in the above code would throw an error.
+``` js
+var counter = 0;
 
-    ## Rule Two: Implicit Binding
+function incrementCounter() {
+    this.counter++;
+}
 
-*   consider whether the call-site has a context object (i.e., owning/containing object)<pre>`var counter = 0;
+var object = {
+    counter: 10,
+    incrementCounter: incrementCounter,
+};
 
-    function incrementCounter() {
-        this.counter++;
-    }
+object.incrementCounter();
+console.log(counter); // 0 - did not get incremented
+console.log(object.counter); // 11 - got incremented
+```
 
-    var object = {
-        counter: 10,
-        incrementCounter: incrementCounter,
-    };
+But wait! There’s more. In some situations, the implicit binding can be lost.
 
-    object.incrementCounter();
-    console.log(counter); // 0 - did not get incremented
-    console.log(object.counter); // 11 - got incremented`</pre>
+``` js
+var counter = 0;
 
-    But wait! There’s more. In some situations, the implicit binding can be lost.
+function incrementCounter() {
+    this.counter++;
+}
 
-    <pre>`var counter = 0;
+var object = {
+    counter: 10,
+    incrementCounter: incrementCounter,
+};
 
-    function incrementCounter() {
-        this.counter++;
-    }
+var copyOfIncrementCounter = object.incrementCounter;
 
-    var object = {
-        counter: 10,
-        incrementCounter: incrementCounter,
-    };
+copyOfIncrementCounter();
+console.log(counter); // 1 - got incremented
+console.log(object.counter); // 10 - did not get incremented
+```
 
-    var copyOfIncrementCounter = object.incrementCounter;
+Here, `copyOfIncrementCounter` looks like it’s a reference to `object.incrementCounter`, but it’s actually a reference to the global `incrementCounter`. So we fall back to the default binding rule and the global `counter` variable gets incremented.
 
-    copyOfIncrementCounter();
-    console.log(counter); // 1 - got incremented
-    console.log(object.counter); // 10 - did not get incremented
-    `</pre>
+Another example of this situation:
 
-    Here, `copyOfIncrementCounter` looks like it’s a reference to `object.incrementCounter`, but it’s actually a reference to the global `incrementCounter`. So we fall back to the default binding rule and the global `counter` variable gets incremented.
+``` js
+var counter = 0;
 
-    Another example of this situation:
+function incrementCounter() {
+    this.counter++;
+}
 
-    <pre>`var counter = 0;
+var object = {
+    counter: 10,
+    incrementCounter: incrementCounter
+};
 
-    function incrementCounter() {
-        this.counter++;
-    }
+function doSomething(callback) {
+    callback();
+}
 
-    var object = {
-        counter: 10,
-        incrementCounter: incrementCounter
-    };
+doSomething(object.incrementCounter);
+console.log(counter); // 1 - got incremented
+console.log(object.counter); // 10 - did not get incremented
+```
 
-    function doSomething(callback) {
-        callback();
-    }
+Why?
 
-    doSomething(object.incrementCounter);
-    console.log(counter); // 1 - got incremented
-    console.log(object.counter); // 10 - did not get incremented
-    `</pre>
+> Parameter passing is just an implicit assignment, and since we’re passing a function, it’s an implicit reference assignment, so the end result is the same as the previous snippet.
 
-    Why?
+## Rule Three: Explicit Binding
 
-    > Parameter passing is just an implicit assignment, and since we’re passing a function, it’s an implicit reference assignment, so the end result is the same as the previous snippet.
+* Force a function call to use a particular object as `this`
+* Use `call` and `apply`, which are available to all functions
+* `call` and `apply` are methods that take an object to use for `this` as their first argument
+* `call` and `apply` are identical with respect to `this`; we won’t worry about their differences for now
+^
 
-    ## Rule Three: Explicit Binding
+``` js
+var counter = 0;
 
-*   force a function call to use a particular object as `this`
-*   use `call` and `apply`, which are available to all functions
-*   `call` and `apply` are methods that take an object to use for `this` as their first argument
-*   `call` and `apply` are identical with respect to `this`; we won’t worry about their differences for now<pre>`var counter = 0;
+function incrementCounter() {
+    this.counter++;
+}
 
-    function incrementCounter() {
-        this.counter++;
-    }
+var object = {
+    counter: 10
+};
 
-    var object = {
-        counter: 10
-    };
+incrementCounter.call(object);
+console.log(counter); // 0 - did not get incremented
+console.log(object.counter); // 11 - got incremented
+```
 
+Note that if a primitive is passed instead of an object, it gets wrapped in its object-form (`String`, `Boolean`, or `Number`). This is called _boxing_.
+
+> Unfortunately, explicit binding alone still doesn’t offer any solution to the issue mentioned previously, of a function “losing” its intended `this` binding…
+
+…but _hard binding_, a variation pattern around explicit binding, will work.
+
+``` js
+var counter = 0;
+
+function incrementCounter() {
+    this.counter++;
+}
+
+var object = {
+    counter: 10
+};
+
+var incrementCounterWrapper = function() {
     incrementCounter.call(object);
-    console.log(counter); // 0 - did not get incremented
-    console.log(object.counter); // 11 - got incremented`</pre>
+}
 
-    Note that if a primitive is passed instead of an object, it gets wrapped in its object-form (`String`, `Boolean`, or `Number`). This is called _boxing_.
+incrementCounterWrapper();
+console.log(counter); // 0 - did not get incremented
+console.log(object.counter); // 11 - got incremented
 
-    > Unfortunately, explicit binding alone still doesn’t offer any solution to the issue mentioned previously, of a function “losing” its intended `this` binding…
+incrementCounterWrapper.call(window); // will it use the global counter? nope!
+console.log(counter); // 0 - did not get incremented
+console.log(object.counter); // 12 - got incremented
+```
 
-    …but _hard binding_, a variation pattern around explicit binding, will work.
+What’s happening here is `incrementCounterWrapper` internally calls `incrementCounter` with `object` as `this`. No matter how `incrementCounterWrapper` is called, it will always manually invoke `incrementCounter` with `object`.
 
-    <pre>`var counter = 0;
+> Since hard binding is such a common pattern, it’s provided with a built-in utility as of ES5, `Function.prototype.bind`
 
-    function incrementCounter() {
-        this.counter++;
-    }
+> `bind(..)` returns a new function that is hardcoded to call the original function with the `this` context set as you specified.
 
-    var object = {
-        counter: 10
-    };
+``` js
+var counter = 0;
 
-    var incrementCounterWrapper = function() {
-        incrementCounter.call(object);
-    }
+function incrementCounter() {
+    this.counter++;
+}
 
-    incrementCounterWrapper();
-    console.log(counter); // 0 - did not get incremented
-    console.log(object.counter); // 11 - got incremented
+var object = {
+    counter: 10
+};
 
-    incrementCounterWrapper.call(window); // will it use the global counter? nope!
-    console.log(counter); // 0 - did not get incremented
-    console.log(object.counter); // 12 - got incremented
-    `</pre>
+var incrementCounterWrapper = incrementCounter.bind(object);
 
-    What’s happening here is `incrementCounterWrapper` internally calls `incrementCounter` with `object` as `this`. No matter how `incrementCounterWrapper` is called, it will always manually invoke `incrementCounter` with `object`.
+incrementCounterWrapper();
+console.log(counter); // 0 - did not get incremented
+console.log(object.counter); // 11 - got incremented
+```
 
-    > Since hard binding is such a common pattern, it’s provided with a built-in utility as of ES5, `Function.prototype.bind`
+## Rule Four: `new` Binding
 
-    > `bind(..)` returns a new function that is hardcoded to call the original function with the `this` context set as you specified.
+Ah, the `new` keyword. Another confusing one that I often see but am never sure when to use myself.
 
-    <pre>`var counter = 0;
+> JavaScript has a `new` operator, and the code pattern to use it looks basically identical to what we see in those class-oriented languages; most developers assume that JavaScript’s mechanism is doing something similar. However, there really is no connection to class-oriented functionality implied by `new` usage in JS.
 
-    function incrementCounter() {
-        this.counter++;
-    }
+Okay, what else?
 
-    var object = {
-        counter: 10
-    };
+> First, let’s re-define what a “constructor” in JavaScript is. In JS, constructors are just functions that happen to be called with the `new` operator in front of them. They are not attached to classes, nor are they instantiating a class. They are not even special types of functions. They’re just regular functions that are, in essence, hijacked by the use of new in their invocation.
 
-    var incrementCounterWrapper = incrementCounter.bind(object);
+How is `new` relevant to `this`, then?
 
-    incrementCounterWrapper();
-    console.log(counter); // 0 - did not get incremented
-    console.log(object.counter); // 11 - got incremented
-    `</pre>
+Well, when a function is invoked with `new`, a brand new object is created. That object is set as the `this` binding for that function call. And that function call will return the new object (unless the function returns its own alternate object).
 
-    ## Rule Four: `new` Binding
+``` js
+var counter = 0;
 
-    Ah, the `new` keyword. Another confusing one that I often see but am never sure when to use myself.
+function incrementCounter(counter) {
+    this.counter = counter;
+    this.counter++;
+}
 
-    > JavaScript has a `new` operator, and the code pattern to use it looks basically identical to what we see in those class-oriented languages; most developers assume that JavaScript’s mechanism is doing something similar. However, there really is no connection to class-oriented functionality implied by `new` usage in JS.
+var newIncrementCounter = new incrementCounter(10);
 
-    Okay, what else?
-
-    > First, let’s re-define what a “constructor” in JavaScript is. In JS, constructors are just functions that happen to be called with the `new` operator in front of them. They are not attached to classes, nor are they instantiating a class. They are not even special types of functions. They’re just regular functions that are, in essence, hijacked by the use of new in their invocation.
-
-    How is `new` relevant to `this`, then?
-
-    Well, when a function is invoked with `new`, a brand new object is created. That object is set as the `this` binding for that function call. And that function call will return the new object (unless the function returns its own alternate object).
-
-    <pre>`var counter = 0;
-
-    function incrementCounter(counter) {
-        this.counter = counter;
-        this.counter++;
-    }
-
-    var newIncrementCounter = new incrementCounter(10);
-
-    console.log(counter); // 0 - did not get incremented
-    console.log(newIncrementCounter.counter); // 11 - got incremented
+console.log(counter); // 0 - did not get incremented
+console.log(newIncrementCounter.counter); // 11 - got incremented
+```
 
 ## Rule Precedence
 
-1.  `new` binding
-2.  explicit binding
-3.  implicit binding
-4.  default binding
+1. `new` binding
+2. explicit binding
+3. implicit binding
+4. default binding
 
 More detailed:
 
-> 1.  Is the function called with `new` (new binding)? If so, `this` is the newly constructed object.
-> `var bar = new foo()`
-> 2.  Is the function called with `call` or `apply` (explicit binding), even hidden inside a `bind` hard binding? If so, `this` is the explicitly specified object.
-> `var bar = foo.call( obj2 )`
-> 3.  Is the function called with a context (implicit binding), otherwise known as an owning or containing object? If so, `this` is that context object.
-> `var bar = obj1.foo()`
-> 4.  Otherwise, default the `this` (default binding). If in `strict mode`, pick `undefined`, otherwise pick the global object.
-> `var bar = foo()`
+> 1. Is the function called with `new` (new binding)? If so, `this` is the newly constructed object.
+> 2. Is the function called with `call` or `apply` (explicit binding), even hidden inside a `bind` hard binding? If so, `this` is the explicitly specified object.
+> 3. Is the function called with a context (implicit binding), otherwise known as an owning or containing object? If so, `this` is that context object.
+> 4. Otherwise, default the `this` (default binding). If in `strict mode`, pick `undefined`, otherwise pick the global object.
 
 For a discussion on why this is the case, read the original material [here](https://github.com/getify/You-Dont-Know-JS/blob/master/this%20%2526%20object%20prototypes/ch2.md#everything-in-order).
 

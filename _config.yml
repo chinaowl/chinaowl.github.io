@@ -4,9 +4,12 @@ email: hello@chinaowl.co
 description: China's website!
 baseurl: ""
 url: "http://chinaowl.co" # the base hostname & protocol for your site
+date_format: "%B %-d, %Y"
+
+# Social
 twitter_username: china_owl
 github_username:  chinaowl
-date_format: "%B %-d, %Y"
 
 # Build settings
 markdown: kramdown
+permalink: /writing/:title
