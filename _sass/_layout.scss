@@ -19,9 +19,8 @@
 .post-list__link {
   font-size: 1.25em;
   color: $black;
-
   &:hover {
-    color: $light-blue;
+    color: $accent-contrast;
   }
 }
 
@@ -40,4 +39,25 @@
   font-style: italic;
   font-size: 1.25em;
   line-height: 92px;
+}
+
+.project__header {
+  display: flex;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.project__github {
+  background-image: url(/assets/img/other/github-icon-64px.png);
+  background-size: contain;
+  height: 32px;
+  width: 32px;
+  display: inline-block;
+  margin: 20px 0;
+}
+
+.project__summary {
+  background-color: $off-white;
+  padding: 1em;
+  margin-top: 0;
 }
