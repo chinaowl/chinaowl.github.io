@@ -1,10 +1,9 @@
 ---
-# Only the main Sass file needs front matter (the dashes are enough)
+# Do not remove dashes
 ---
 @charset "utf-8";
 
 $body-font-stack: 'Merriweather', serif;
-$code-font-stack: 'Source Code Pro', monospace;
 $header-font-stack: 'Pacifico', cursive;
 
 $black: #333333;
@@ -13,35 +12,19 @@ $light-gray: #e6e6e6;
 $off-white: #fffbe0;
 $accent: #f6416c;
 $accent-contrast: #00b8a9;
-// wtf
 
-// Width of the content area
-$content-width:    800px;
+$content-width: 800px;
+$on-mobile: 600px;
 
-$on-palm:          600px;
-$on-laptop:        800px;
-
-
-
-// Use media queries like this:
-// @include media-query($on-palm) {
-//     .wrapper {
-//         padding-right: $spacing-unit / 2;
-//         padding-left: $spacing-unit / 2;
-//     }
-// }
 @mixin media-query($device) {
-    @media screen and (max-width: $device) {
-        @content;
-    }
+  @media screen and (max-width: $device) {
+    @content;
+  }
 }
 
-
-
-// Import partials from `sass_dir` (defaults to `_sass`)
 @import "base";
-@import "layout";
 @import "header";
 @import "footer";
 @import "highlight";
-
+@import "projects";
+@import "writing";
