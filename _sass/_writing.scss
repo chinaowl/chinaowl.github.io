@@ -4,6 +4,11 @@
   border-bottom: 1px solid $light-gray;
   padding: 0.5em 1em;
 
+  @include media-query($mobile) {
+    flex-direction: column;
+    border-bottom: none;
+  }
+
   &:last-child {
     border-bottom: none;
   }
@@ -12,6 +17,7 @@
 .post-list__link {
   font-size: 1.25em;
   color: $black;
+  margin-right: 1em;
   
   &:hover {
     color: $accent-contrast;
@@ -20,16 +26,35 @@
 
 .post-list__date {
   font-size: 1em;
-  color: $accent;
+  color: $gray;
 }
 
 .post__header {
   display: flex;
   justify-content: space-between;
+
+  @include media-query($mobile) {
+    flex-direction: column;
+  }
+}
+
+.post__title {
+  font-size: 1.75em;
+  margin: 0.5em 0;
+
+  @include media-query($mobile) {
+    font-size: 1.5em;
+    margin: 0.25em 0;
+  }
 }
 
 .post__date {
-  font-style: italic;
+  color: $gray;
   font-size: 1.25em;
-  line-height: 92px;
+  line-height: 70px;
+
+  @include media-query($mobile) {
+    font-size: 1.15em;
+    line-height: normal;
+  }
 }

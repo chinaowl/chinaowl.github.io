@@ -25,10 +25,10 @@ projects:
 {% for project in page.projects %}
   <div class="project">
     <div class="project__header">
-      <a class="project__title" href="{{ project.url }}" target="_blank" class="">
+      <a class="project__title" href="{{ project.url }}" target="_blank">
         <h2>{{ project.title }}</h2>
       </a>
-      <a href="{{ project.github }}"><span class="project__github"></span></a>
+      <a href="{{ project.github }}" target="_blank"><span class="project__github"></span></a>
     </div>
     <p class="project__summary">
       {{ project.summary }}
