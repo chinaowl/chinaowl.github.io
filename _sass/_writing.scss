@@ -1,17 +1,18 @@
-.post-list {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
 .post-list__item {
+  display: flex;
+  justify-content: space-between;
   border-bottom: 1px solid $light-gray;
   padding: 0.5em 1em;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .post-list__link {
   font-size: 1.25em;
   color: $black;
+  
   &:hover {
     color: $accent-contrast;
   }
@@ -19,8 +20,7 @@
 
 .post-list__date {
   font-size: 1em;
-  color: $gray;
-  float: right;
+  color: $accent;
 }
 
 .post__header {
