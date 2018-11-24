@@ -5,7 +5,7 @@ permalink: /projects/
 projects:
   - title: Next Caltrain
     url: http://next-caltrain.herokuapp.com/
-    github: https://github.com/chinaowl/next-caltrain
+    github: https://github.com/chinaowl/next-caltrain-old
     summary: A simple web app that tells you the next Caltrain you can take, based on your origin and destination stations and the current time. I used Knockout on the client-side and Node and Postgres on the server-side. Hosted on Heroku.
 ---
 
